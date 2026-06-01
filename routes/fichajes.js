@@ -36,7 +36,7 @@ router.get('/admin/export', isAdmin, async (req,res) => {
   try {
     const {desde,hasta} = req.query;
     const fichajes = await db.getFichajesRango(desde||'2000-01-01',hasta||'9999-12-31');
-    const fmt = iso => iso ? new Date(iso).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}) : '';
+    const fmt = iso => iso ? new Date(iso).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Madrid'}) : '';
     const lines = ['Trabajador,Fecha,Entrada,Inicio descanso,Fin descanso,Salida,Editado'];
     for (const f of fichajes) {
       lines.push([f.worker_name,f.fecha,fmt(f.entrada),fmt(f.inicio_descanso),fmt(f.fin_descanso),fmt(f.salida),f.editado?'Sí':'No'].join(','));
