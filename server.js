@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const path = require('path');
 const db = require('./database');
+const { initScheduler } = require('./scheduler');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -23,5 +24,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('*', (req,res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
 db.init().then(() => {
+  initScheduler();
   app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`));
 }).catch(err => { console.error(err); process.exit(1); });
