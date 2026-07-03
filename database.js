@@ -58,6 +58,9 @@ const db = {
   getFichajesPorFecha: async (fecha) => (await pool.query(`SELECT f.*,w.name AS worker_name FROM fichajes f JOIN workers w ON f.worker_id=w.id WHERE f.fecha=$1 ORDER BY w.name`,[fecha])).rows,
   getFichajesRango: async (desde,hasta) => (await pool.query(`SELECT f.*,w.name AS worker_name FROM fichajes f JOIN workers w ON f.worker_id=w.id WHERE f.fecha BETWEEN $1 AND $2 ORDER BY f.fecha,w.name`,[desde,hasta])).rows,
   getHistorialWorker: async (worker_id) => (await pool.query("SELECT * FROM fichajes WHERE worker_id=$1 ORDER BY fecha DESC LIMIT 60",[worker_id])).rows,
+  getFichajeByWorkerFecha: async (worker_id,fecha) => (await pool.query("SELECT * FROM fichajes WHERE worker_id=$1 AND fecha=$2",[worker_id,fecha])).rows[0]||null,
+  addFichajeCompleto: async (worker_id,fecha,entrada,inicio_descanso,fin_descanso,salida) =>
+    pool.query("INSERT INTO fichajes(worker_id,fecha,entrada,inicio_descanso,fin_descanso,salida,editado) VALUES($1,$2,$3,$4,$5,$6,false)",[worker_id,fecha,entrada,inicio_descanso,fin_descanso,salida]),
 };
 
 module.exports = db;
